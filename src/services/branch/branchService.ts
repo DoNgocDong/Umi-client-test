@@ -23,6 +23,13 @@ export async function createBranch(data: BranchTyping.BranchDTO) {
   })
 }
 
+export async function updateBranch(id: string, data: BranchTyping.BranchDTO) {
+  return request<PageData<BranchTyping.BranchInfo>>(path + `/${id}`, {
+    method: 'PUT',
+    data: data,
+  })
+}
+
 export async function deleteBranchIds(ids: String[]) {
   return request(path, {
     method: 'DELETE',

@@ -1,6 +1,6 @@
 declare namespace BranchTyping {
   interface BranchInfo {
-    id: string;
+    branchId: string;
     branchName: string;
     address: string;
     description: string;

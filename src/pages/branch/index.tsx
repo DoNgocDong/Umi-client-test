@@ -1,13 +1,14 @@
 import services from '@/services';
-import React, { Key, useRef, useState } from 'react';
+import React, { Key, ReactNode, useRef, useState } from 'react';
 import { ProColumns, ProTable, PageContainer, ActionType } from '@ant-design/pro-components';
 import dayjs from 'dayjs';
 import { Button, message, notification } from 'antd';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import CreateBranch from '@/pages/branch/components/createBranch';
+import UpdateBranch from '@/pages/branch/components/updateBranch';
 import { RequestError } from '@umijs/max';
 
-const { getBranchList, createBranch, deleteBranchIds } = services.Branch;
+const { getBranchList, createBranch, updateBranch, deleteBranchIds } = services.Branch;
 
 const handleCreateBranch = async (data: BranchTyping.BranchDTO) => {
   const hide = message.loading('Loading...');
@@ -15,7 +16,7 @@ const handleCreateBranch = async (data: BranchTyping.BranchDTO) => {
   try {
     await createBranch( {...data} );
     hide();
-    message.success('Success!');
+    message.success('Created!');
     return true;
   } catch (error: RequestError | any) {
     const message = error?.response?.data?.error?.message || error?.response?.data || error?.message;
@@ -23,6 +24,26 @@ const handleCreateBranch = async (data: BranchTyping.BranchDTO) => {
     return false;
   }
 };
+
+const handleUpdateBranch = async (data: BranchTyping.BranchInfo) => {
+  const hide = message.loading('Loading...');
+  const updateData: BranchTyping.BranchDTO = {
+    branchName: data.branchName,
+    address: data.address,
+    description: data.description    
+  }
+
+  try {
+    await updateBranch(data.branchId, updateData);
+    hide();
+    message.success('Updated!');
+    return true;
+  } catch (error: RequestError | any) {
+    const message = error?.response?.data?.error?.message || error?.response?.data || error?.message;
+    notification.error(message);
+    return false;
+  }
+}
 
 const handleDeleteBranchIds = async (ids: String[]) => {
   const hide = message.loading('Loading...');
@@ -44,7 +65,13 @@ const Branch: React.FC = () => {
   const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [selectedRowKeysState, setSelectedRowKeys] = useState<Key[]>([]);
+  const [updateRecord, setUpdateRecord] = useState<BranchTyping.BranchInfo>();
   const actionRef = useRef<ActionType>();
+
+  const handleEdit = (record: BranchTyping.BranchInfo) => {
+    setUpdateRecord(record)
+    setUpdateModalVisible(true);
+  };
 
   const columns: ProColumns<BranchTyping.BranchInfo>[] = [
     {
@@ -52,19 +79,19 @@ const Branch: React.FC = () => {
       dataIndex: 'branchId',
       hideInForm: true,
       key: 'branchId',
-      width: '30%',
       fixed: 'left',
+      width: '20%'
     },
     {
       title: 'Name',
       dataIndex: 'branchName',
       key: 'branchName',
-      fixed: 'left',
+      colSize: 15,
       formItemProps: {
         rules: [
           {
             required: true,
-            message: 'Name is required!',
+            message: 'Branch name is required!',
           },
         ],
       },
@@ -77,7 +104,7 @@ const Branch: React.FC = () => {
         rules: [
           {
             required: true,
-            message: 'Name is required!',
+            message: 'Address is required!',
           },
         ],
       },
@@ -97,6 +124,22 @@ const Branch: React.FC = () => {
         return dayjs(text?.toLocaleString()).format('DD-MM-YYYY');
       },
     },
+    {
+      title: 'Action',
+      fixed: 'right',
+      width: '5%',
+      render: (text: ReactNode, record: BranchTyping.BranchInfo) => (
+        <>
+          <a 
+            href='javascript:;' 
+            style={{ display: 'flex', justifyContent: 'center' }} 
+            onClick={() => handleEdit(record)}
+          >
+            <EditOutlined />
+          </a>
+        </>
+      )
+    },
   ];
 
   return (
@@ -105,6 +148,7 @@ const Branch: React.FC = () => {
         columns={columns}
         loading={loading}
         actionRef={actionRef}
+        bordered={true}
         rowKey="branchId"
         request={async (params, sorter, filter) => {
           setLoading(true);
@@ -133,7 +177,7 @@ const Branch: React.FC = () => {
         }}
         rowSelection={{
           selectedRowKeys: selectedRowKeysState,
-          onChange: (selectedKeys: Key[], selectedRows: BranchTyping.BranchDTO[]) => {
+          onChange: (selectedKeys: Key[], selectedRows: BranchTyping.BranchInfo[]) => {
             setSelectedRowKeys(selectedKeys)
           }
         }}
@@ -190,6 +234,24 @@ const Branch: React.FC = () => {
           columns={columns}
         />
       </CreateBranch>
+
+      <UpdateBranch 
+        visible={updateModalVisible} 
+        onCancel={() => setUpdateModalVisible(false)} 
+        data={updateRecord} 
+        onUpdate={async (data: BranchTyping.BranchInfo) => {
+          setLoading(true);
+          const success = await handleUpdateBranch(data);
+          setLoading(false);
+
+          if (success) {
+            setUpdateModalVisible(false);
+            if (actionRef.current) {
+              await actionRef.current.reload();
+            }
+          }
+        }}>
+      </UpdateBranch>
     </PageContainer>
   );
 };
