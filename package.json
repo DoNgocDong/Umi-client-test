@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "author": "DoNgocDong <ngocdong2110.2003@gmail.com>",
+  "scripts": {
+    "build": "max build",
+    "dev": "max dev",
+    "format": "prettier --cache --write .",
+    "postinstall": "max setup",
+    "prepare": "husky",
+    "setup": "max setup",
+    "start": "npm run dev"
+  },
+  "dependencies": {
+    "@ant-design/charts": "^2.2.6",
+    "@ant-design/icons": "^5.0.1",
+    "@ant-design/pro-components": "^2.4.4",
+    "@ant-design/pro-layout": "^7.22.3",
+    "@umijs/max": "^4.4.5",
+    "@umijs/plugin-request": "^2.9.0",
+    "antd": "^5.4.0",
+    "axios": "^1.7.9",
+    "dayjs": "^1.11.13",
+    "umi-request": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.33",
+    "@types/react-dom": "^18.0.11",
+    "husky": "^9",
+    "lint-staged": "^13.2.0",
+    "prettier": "^2.8.7",
+    "prettier-plugin-organize-imports": "^3.2.2",
+    "prettier-plugin-packagejson": "^2.4.3",
+    "typescript": "^5.0.3"
+  }
+}
