@@ -3,9 +3,13 @@ import routes from './routes';
 
 export default defineConfig({
   hash: true,
-  antd: {},
+  antd: {
+    compact: true
+  },
   access: {},
+  mako: {},
   model: {},
+  dva: {},
   initialState: {},
   request: {},
   layout: {

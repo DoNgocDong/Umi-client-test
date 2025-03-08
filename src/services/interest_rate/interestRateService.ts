@@ -1,8 +1,9 @@
 import request from '../baseRequest';
 import { PageData } from '@/dtos/response';
 import { PageInfo, PageReqData } from '@/dtos/request';
+import { InterestRateDTO, InterestRateInfo, Group, Unit } from '@/services/interest_rate/typing';
 
-const path = '/branch';
+const path = '/interest-rate';
 
 export async function getPagination(params?: PageReqData) {
   const pageParams: PageInfo = {
@@ -10,21 +11,21 @@ export async function getPagination(params?: PageReqData) {
     pageSize: params?.pageSize,
   }
 
-  return request<PageData<BranchTyping.BranchInfo>>(path, {
+  return request<PageData<InterestRateInfo>>(path, {
     method: 'GET',
     params: pageParams,
   });
 }
 
-export async function create(data: BranchTyping.BranchDTO) {
-  return request<PageData<BranchTyping.BranchInfo>>(path, {
+export async function create(data: InterestRateDTO) {
+  return request<PageData<InterestRateInfo>>(path, {
     method: 'POST',
     data: data,
   })
 }
 
-export async function updateById(id: string, data: BranchTyping.BranchDTO) {
-  return request<PageData<BranchTyping.BranchInfo>>(path + `/${id}`, {
+export async function updateById(id: string, data: InterestRateDTO) {
+  return request<PageData<InterestRateInfo>>(path + `/${id}`, {
     method: 'PUT',
     data: data,
   })

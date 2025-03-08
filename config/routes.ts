@@ -1,7 +1,12 @@
 export default [
   {
     path: '/',
-    redirect: '/home',
+    redirect: '/home'
+  },
+  {
+    path: '/login',
+    component: './auth/login.tsx',
+    hideInMenu: true
   },
   {
     name: 'Home',
@@ -9,23 +14,25 @@ export default [
     component: './Home',
   },
   {
-    name: 'Dashboard',
-    path: '/dashboard',
-    component: './dashboard',
+    name: 'Admin',
+    path: '/',
+    routes: [
+      {name: 'Dashboard', path: '/dashboard', component: './dashboard'},
+      {name: 'Users', path: '/users', component: './users'},
+      {name: 'Branch', path: '/branch', component: './branch'},
+      {name: 'Interest Rate', path: '/interest-rate', component: './interest_rate'},
+    ],
+    wrappers: ['@/wrappers/auth'],
+    access: 'admin'
   },
-  {
-    name: 'Branch',
-    path: '/branch',
-    component: './branch',
-  },
-  {
-    name: ' CRUD',
-    path: '/table',
-    component: './Table',
-  },
+  // {
+  //   name: ' CRUD',
+  //   path: '/table',
+  //   component: './Table',
+  // },
   {
     path: '/*',
-    component: './errors/NotFound.tsx',
+    component: '@/components/Errors/NotFound.tsx',
     layout: false
   },
 ];

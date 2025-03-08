@@ -3,8 +3,12 @@
 
 import * as UserController from './demo/controller';
 import * as Branch from './branch/branchService';
+import * as Users from './user/userService';
+import * as InterestRate from './interest_rate/interestRateService';
 
 export default {
   UserController,
-  Branch
+  Branch,
+  Users,
+  InterestRate
 };
