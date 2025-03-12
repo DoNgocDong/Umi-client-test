@@ -30,7 +30,7 @@ const BranchModel: BranchModelType = {
     }
   },
   reducers: {
-    saveBranchs(state: BranchState, { payload }) {
+    saveBranchs(state, { payload }) {
       return { ...state, list: payload };
     }
   }

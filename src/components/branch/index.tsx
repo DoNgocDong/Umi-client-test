@@ -4,12 +4,11 @@ import { ProColumns, ProTable, PageContainer, ActionType } from '@ant-design/pro
 import dayjs from 'dayjs';
 import { Button, message, Modal, notification } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined, CopyOutlined } from '@ant-design/icons';
-import CreateBranch from '@/components/branch/components/createBranch';
-import UpdateBranch from '@/components/branch/components/updateBranch';
-import { RequestError, useDispatch, useSelector } from '@umijs/max';
+import CreateBranch from '@/components/Branch/components/createBranch';
+import UpdateBranch from '@/components/Branch/components/updateBranch';
+import { RequestError } from '@umijs/max';
 import styles from './index.less';
 import { PageReqData } from '@/dtos/request';
-import { BranchState } from '@/models/branch';
 
 const { getPagination, create, updateById, deleteByIds } = services.Branch;
 
@@ -51,10 +50,6 @@ const Branch: React.FC = () => {
       return false;
     }
   }, []);
-
-  // const handleCreateBranch = () => {
-  //   dispatch({ type: 'branchs/' });
-  // }
   
   const handleUpdateBranch = useCallback(async (data: BranchTyping.BranchInfo) => {
     const hide = message.loading('Loading...');
@@ -91,7 +86,7 @@ const Branch: React.FC = () => {
     }
   }, []);
 
-  const handleEdit = (record: BranchTyping.BranchInfo) => {
+  const handleClickEditBtn = (record: BranchTyping.BranchInfo) => {
     setUpdateRecord(record)
     setUpdateModalVisible(true);
   };
@@ -162,7 +157,7 @@ const Branch: React.FC = () => {
         <>
           <a 
             style={{ display: 'flex', justifyContent: 'center' }} 
-            onClick={() => handleEdit(record)}
+            onClick={() => handleClickEditBtn(record)}
           >
             <EditOutlined />
           </a>
