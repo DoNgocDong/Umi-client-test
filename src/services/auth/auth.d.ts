@@ -1,11 +1,16 @@
 declare namespace AuthTyping {
   interface LoginData {
-    username: string;
+    phone: string;
     password: string;
-    remember: boolean;
   }
 
   interface ResUserLoggedIn {
-    username: string
+    accessToken: string;
+    expiresIn: string;
+    refreshExpiresIn: string;
+    refreshToken: string;
+    tokenType: string;
+    idToken: string;
+    scope: string;
   }
 }

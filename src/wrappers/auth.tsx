@@ -7,11 +7,11 @@ export default () => {
   const { initialState } = useModel('@@initialState'); // Lấy user từ initialState
 
   useEffect(() => {
-    if (!initialState?.user && !history.location.pathname.includes('login')) {
+    if (!initialState?.token && !history.location.pathname.includes('login')) {
       message.error('You are not login');
       history.push('/login');
     }
-  }, [initialState?.user]);
+  }, [initialState?.token]);
 
   if (!access.admin) {
     return <div>Bạn không có quyền truy cập trang này!</div>;

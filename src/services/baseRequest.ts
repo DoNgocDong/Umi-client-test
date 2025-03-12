@@ -1,7 +1,7 @@
 import { request } from '@umijs/max';
 import { ResponseDTO } from '@/dtos/response';
 
-const serviceUri = process.env.REACT_APP_SERVICE_URI || 'http://localhost:8082/api/v1/accounts';
+const serviceUri = process.env.REACT_APP_SERVICE_URI || 'http://localhost:8080';
 
 const apiRequest =
   <T>(url: string,

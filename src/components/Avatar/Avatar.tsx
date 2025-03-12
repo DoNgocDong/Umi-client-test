@@ -12,7 +12,7 @@ const menuItems: MenuProps['items'] = [
       Modal.confirm({ 
         title: 'Are you sure to Log out?', 
         onOk: () => { 
-          localStorage.removeItem('user');
+          localStorage.removeItem('access_token');
           history.push('/login');
           window.location.reload();
         }, 
@@ -25,7 +25,7 @@ const AvatarContent: FC = () => {
   const { initialState } = useModel('@@initialState');
 
   // Nếu user đã đăng nhập, hiển thị Avatar + Logout
-  if (initialState?.user) {
+  if (initialState?.token) {
     return (
       <Dropdown menu={{ items: menuItems }}>
         <Avatar 

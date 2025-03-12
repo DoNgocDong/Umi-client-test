@@ -1,157 +1,209 @@
-import { Button, Checkbox, Form, Grid, Input, message, theme, Typography } from "antd";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { CSSProperties } from "react";
-import { login } from "@/services/auth/loginService";
-import { history } from "@umijs/max";
+import {
+  FacebookOutlined,
+  GithubOutlined,
+  GoogleOutlined,
+  HomeOutlined,
+  LockOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import {
+  LoginFormPage,
+  ProConfigProvider,
+  ProFormText,
+} from '@ant-design/pro-components';
+import { Button, Divider, message, Space, theme } from 'antd';
+import logoUrl from "@/assets/logo/KLB_logo.svg";
+import type { CSSProperties } from 'react';
+import { history, RequestError } from '@umijs/max';
+import { login } from "@/services/auth/authService";
 
-const { useToken } = theme;
-const { useBreakpoint } = Grid;
-const { Text, Title, Link } = Typography;
+const iconStyles: CSSProperties = {
+  color: 'rgba(0, 0, 0, 0.2)',
+  fontSize: '18px',
+  verticalAlign: 'middle',
+  cursor: 'pointer',
+};
 
-interface CSSProp {
-  [key: string]: CSSProperties
-}
+const Page = () => {
+  const { token } = theme.useToken();
 
-export default function App() {
-  const { token } = useToken();
-  const screens = useBreakpoint();
-
-  const handleLogin = async (data: AuthTyping.LoginData) => {
+  const handleLogin = async (data: any) => {
     try { 
-      const res = await login(data);
+      const {accessToken} = await login(data);
 
-      localStorage.setItem('user', res.username); 
+      localStorage.setItem('access_token', accessToken); 
       message.success('Đăng nhập thành công!'); 
       
       history.push('/dashboard'); 
       window.location.reload()
-    } catch (err: any) { 
-      message.error(err?.message); 
+    } catch (error: RequestError | any) { 
+      const msg = error?.response?.data?.error?.message || error?.response?.data || error?.message || 'Unknow Error!';
+      message.error(msg); 
     } 
   };
 
-  const styles: CSSProp = {
-    container: {
-      margin: "0 auto",
-      padding: screens.md ? `${token.paddingXL}px` : `${token.sizeXXL}px ${token.padding}px`,
-      width: "500px"
-    },
-    footer: {
-      marginTop: token.marginLG,
-      textAlign: "center",
-      width: "100%"
-    },
-    forgotPassword: {
-      float: "right"
-    },
-    header: {
-      marginBottom: token.marginXL
-    },
-    section: {
-      alignItems: "start",
-      backgroundColor: token.colorBgContainer,
-      display: "flex",
-      height: screens.sm ? "90vh" : "auto",
-      padding: screens.md ? `${token.sizeXXL}px 0px` : "0px"
-    },
-    text: {
-      color: token.colorTextSecondary
-    },
-    title: {
-      fontSize: screens.md ? token.fontSizeHeading2 : token.fontSizeHeading3
-    }
-  };
-
   return (
-    <section style={styles.section}>
-      <div style={styles.container}>
-        <div style={styles.header}>
-          <svg
-            width="25"
-            height="24"
-            viewBox="0 0 25 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect x="0.464294" width="24" height="24" rx="4.8" fill="#1890FF" />
-            <path
-              d="M14.8643 3.6001H20.8643V9.6001H14.8643V3.6001Z"
-              fill="white"
-            />
-            <path
-              d="M10.0643 9.6001H14.8643V14.4001H10.0643V9.6001Z"
-              fill="white"
-            />
-            <path
-              d="M4.06427 13.2001H11.2643V20.4001H4.06427V13.2001Z"
-              fill="white"
-            />
-          </svg>
-
-          <Title style={styles.title}>Sign in</Title>
-          <Text style={styles.text}>
-            Welcome back to AntBlocks UI! Please enter your details below to
-            sign in.
-          </Text>
-        </div>
-        <Form
-          name="normal_login"
-          initialValues={{
-            remember: true,
-          }}
-          onFinish={handleLogin}
-          layout="vertical"
-          requiredMark="optional"
-        >
-          <Form.Item
-            name="username"
-            rules={[
-              {
-                len: 5,
-                required: true,
-                message: "Minimum length is 5 char!",
-              },
-            ]}
-          >
-            <Input
-              prefix={<UserOutlined />}
-              placeholder="Username"
-            />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Please input your Password!",
-              },
-            ]}
-          >
-            <Input.Password
-              prefix={<LockOutlined />}
-              type="password"
-              placeholder="Password"
-            />
-          </Form.Item>
-          <Form.Item>
-            <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-            <a style={styles.forgotPassword} href="javascript:;">
-              Forgot password?
-            </a>
-          </Form.Item>
-          <Form.Item style={{ marginBottom: "0px" }}>
-            <Button block={true} type="primary" htmlType="submit">
-              Log in
+    <div
+      style={{
+        backgroundColor: 'white',
+        height: '100vh',
+      }}
+    >
+      <LoginFormPage
+        logo={<img src={logoUrl} alt="KLB logo" style={{ height: '32px' }} />}
+        backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
+        title="KLB"
+        containerStyle={{
+          backgroundColor: 'rgba(216, 183, 150, 0.8)',
+          backdropFilter: 'blur(4px)',
+        }}
+        subTitle="Ngân Hàng Thương mại Cổ Phần Kiên Long"
+        activityConfig={{
+          style: {
+            boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)',
+            color: token.colorTextHeading,
+            borderRadius: 8,
+            backgroundColor: 'rgba(255,255,255,0.25)',
+            backdropFilter: 'blur(4px)',
+          },
+          title: 'K3-Banking System',
+          subTitle: 'Client for Account Service',
+          action: (
+            <Button
+              onClick={() => history.push('/home')}
+              size="large"
+              style={{
+                borderRadius: 20,
+                background: token.colorBgElevated,
+                color: token.colorPrimary,
+                width: '100%',
+              }}
+            >
+              <HomeOutlined /> Home
             </Button>
-            <div style={styles.footer}>
-              <Text style={styles.text}>Don't have an account?</Text>{" "}
-              <Link href="">Sign up now</Link>
-            </div>
-          </Form.Item>
-        </Form>
-      </div>
-    </section>
+          ),
+        }}
+        actions={
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column',
+            }}
+          >
+            <Divider plain>
+              <span
+                style={{
+                  color: 'black',
+                  fontWeight: 'normal',
+                  fontSize: 14,
+                }}
+              >
+                Hoặc đăng nhập bằng
+              </span>
+            </Divider>
+            <Space align="center" size={24}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                  height: 40,
+                  width: 40,
+                  border: '1px solid ' + token.colorPrimaryBorder,
+                  borderRadius: '50%',
+                }}
+              >
+                <FacebookOutlined style={{ ...iconStyles, color: '#121413' }} />
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                  height: 40,
+                  width: 40,
+                  border: '1px solid ' + token.colorPrimaryBorder,
+                  borderRadius: '50%',
+                }}
+              >
+                <GoogleOutlined style={{ ...iconStyles, color: '#121413' }} />
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                  height: 40,
+                  width: 40,
+                  border: '1px solid ' + token.colorPrimaryBorder,
+                  borderRadius: '50%',
+                }}
+              >
+                <GithubOutlined style={{ ...iconStyles, color: '#121413' }} />
+              </div>
+            </Space>
+          </div>
+        }
+        onFinish={handleLogin}
+      >
+        <>
+          <ProFormText
+            name="phone"
+            fieldProps={{
+              size: 'large',
+              prefix: (
+                <UserOutlined
+                  style={{
+                    color: token.colorText,
+                  }}
+                  className={'prefixIcon'}
+                />
+              ),
+            }}
+            placeholder={'username or phone'}
+            rules={[
+              {
+                required: true,
+                message: 'Vui lòng nhập username!',
+              },
+            ]}
+          />
+          <ProFormText.Password
+            name="password"
+            fieldProps={{
+              size: 'large',
+              prefix: (
+                <LockOutlined
+                  style={{
+                    color: token.colorText,
+                  }}
+                  className={'prefixIcon'}
+                />
+              ),
+            }}
+            placeholder={'password'}
+            rules={[
+              {
+                required: true,
+                message: 'Vui lòng nhập password!',
+              },
+            ]}
+          />
+        </>
+      </LoginFormPage>
+    </div>
   );
-}
+};
+
+export default () => {
+  return (
+    <ProConfigProvider dark>
+      <Page />
+    </ProConfigProvider>
+  );
+};

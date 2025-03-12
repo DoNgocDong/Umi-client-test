@@ -1,3 +1,5 @@
+import { layout } from "@/app";
+
 export default [
   {
     path: '/',
@@ -6,6 +8,7 @@ export default [
   {
     path: '/login',
     component: './auth/login.tsx',
+    layout: false,
     hideInMenu: true
   },
   {

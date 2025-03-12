@@ -3,7 +3,7 @@ import { PageData } from '@/dtos/response';
 import { PageInfo, PageReqData } from '@/dtos/request';
 import { InterestRateDTO, InterestRateInfo, Group, Unit } from '@/services/interest_rate/typing';
 
-const path = '/interest-rate';
+const path = '/account/api/v1/accounts/interest-rate';
 
 export async function getPagination(params?: PageReqData) {
   const pageParams: PageInfo = {

@@ -45,8 +45,8 @@ const Branch: React.FC = () => {
       message.success('Created!');
       return true;
     } catch (error: RequestError | any) {
-      const message = error?.response?.data?.error?.message || error?.response?.data || error?.message;
-      notification.error(message);
+      const message = error?.response?.data?.error?.message || error?.response?.data || error?.message || 'Unknow Error';
+      notification.error({message});
       return false;
     }
   }, []);
@@ -65,7 +65,7 @@ const Branch: React.FC = () => {
       message.success('Updated!');
       return true;
     } catch (error: RequestError | any) {
-      const message = error?.response?.data?.error?.message || error?.response?.data || error?.message;
+      const message = error?.response?.data?.error?.message || error?.response?.data || error?.message || 'Unknow Error';
       notification.error(message);
       return false;
     }
@@ -80,8 +80,8 @@ const Branch: React.FC = () => {
       message.success('Deleted!');
       return true;
     } catch (error: RequestError | any) {
-      const message = error?.response?.data?.error?.message || error?.response?.data || error?.message;
-      notification.error(message || 'Unknown Error!');
+      const message = error?.response?.data?.error?.message || error?.response?.data || 'Unknow Error';
+      notification.error({message: message || 'Unknown Error!'});
       return false;
     }
   }, []);
@@ -249,10 +249,10 @@ const Branch: React.FC = () => {
           onSubmit={async (value) => {
             setLoading(true);
             const success = await handleCreateBranch(value);
+            setCreateModalVisible(false);
             setLoading(false);
 
             if (success) {
-              setCreateModalVisible(false);
               if (actionRef.current) {
                 await actionRef.current.reload();
               }
@@ -272,9 +272,9 @@ const Branch: React.FC = () => {
           setLoading(true);
           const success = await handleUpdateBranch(data);
           setLoading(false);
+          setUpdateModalVisible(false);
 
           if (success) {
-            setUpdateModalVisible(false);
             if (actionRef.current) {
               await actionRef.current.reload();
             }

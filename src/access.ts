@@ -1,6 +1,6 @@
-export default function access(initialState: { user?: any }) {
+export default function access(initialState: { token?: string }) {
   const admin = !!(
-    initialState && initialState.user == 'admin'
+    initialState && initialState.token == 'admin'
   );
 
   return {
