@@ -1,83 +1,79 @@
-import services from '@/services';
-import React, { Key, ReactNode, useRef, useState, useCallback } from 'react';
+import React, { Key, ReactNode, useRef, useState, useCallback, useEffect } from 'react';
 import { ProColumns, ProTable, PageContainer, ActionType } from '@ant-design/pro-components';
 import dayjs from 'dayjs';
 import { Button, message, Modal, notification } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined, CopyOutlined } from '@ant-design/icons';
-import CreateBranch from '@/components/Branch/components/createBranch';
-import UpdateBranch from '@/components/Branch/components/updateBranch';
-import { RequestError } from '@umijs/max';
+import CreateBranch from '@/components/Admin/Branch/components/createBranch';
+import UpdateBranch from '@/components/Admin/Branch/components/updateBranch';
+import { AnyAction, connect, Dispatch, RequestError } from '@umijs/max';
 import styles from './index.less';
 import { PageReqData } from '@/dtos/request';
+import { BranchState } from '@/models/branch';
 
-const { getPagination, create, updateById, deleteByIds } = services.Branch;
+interface BranchListProps {
+  branch: BranchState;
+  dispatch: (args: any) => Promise<Dispatch<AnyAction>>;
+}
 
 const copyClipboard = async (value?: string) => {
   await navigator.clipboard.writeText(value || '');
   message.success('Copied!');
 }
 
-const Branch: React.FC = () => {
+const Branch: React.FC<BranchListProps> = ({ branch, dispatch }) => {
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const [selectedRowKeysState, setSelectedRowKeys] = useState<Key[]>([]);
   const [updateRecord, setUpdateRecord] = useState<BranchTyping.BranchInfo>();
+  const [pagination, setPagination] = useState<PageReqData>({
+    current: 1,
+    pageSize: 10,
+  });
   const actionRef = useRef<ActionType>();
 
-  const fetchBranchData = useCallback(async (params: PageReqData) => {
-    setLoading(true);
-    const { data } = await getPagination(params);
-    setLoading(false);
-
-    return {
-      data: data.list_data,
-      total: data.total
-    }
-  }, []);
-
   const handleCreateBranch = useCallback(async (data: BranchTyping.BranchDTO) => {
-    const hide = message.loading('Loading...');
-  
     try {
-      await create( {...data} );
-      hide();
+      await dispatch({ type: 'branch/addBranch', payload: data });
       message.success('Created!');
       return true;
     } catch (error: RequestError | any) {
-      const message = error?.response?.data?.error?.message || error?.response?.data || error?.message || 'Unknow Error';
-      notification.error({message});
+      const message = error?.response?.data?.error?.message || error?.response?.data || error?.message;
+      notification.error(message || 'Unknown Error!');
       return false;
     }
   }, []);
   
   const handleUpdateBranch = useCallback(async (data: BranchTyping.BranchInfo) => {
-    const hide = message.loading('Loading...');
-    const updateData: BranchTyping.BranchDTO = {
+    const body: BranchTyping.BranchDTO = {
       branchName: data.branchName,
       address: data.address,
       description: data.description    
     }
   
     try {
-      await updateById(data.branchId, updateData);
-      hide();
+      await dispatch({ 
+        type: 'branch/updateBranch', 
+        payload: {
+          id: data.branchId,
+          body
+        } 
+      });
+
       message.success('Updated!');
       return true;
     } catch (error: RequestError | any) {
-      const message = error?.response?.data?.error?.message || error?.response?.data || error?.message || 'Unknow Error';
-      notification.error(message);
+      const message = error?.response?.data?.error?.message || error?.response?.data || error?.message;
+      notification.error(message || 'Unknown Error!');
       return false;
     }
   }, []);
   
   const handleDeleteBranchIds = useCallback(async (ids: String[]) => {
-    const hide = message.loading('Loading...');
   
     try {
-      await deleteByIds(ids);
-      hide();
-      message.success('Deleted!');
+      await dispatch({ type: 'branch/deleteBranchs', payload: ids }); 
+      message.success('Deleted!'); 
       return true;
     } catch (error: RequestError | any) {
       const message = error?.response?.data?.error?.message || error?.response?.data || 'Unknow Error';
@@ -166,6 +162,16 @@ const Branch: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true); 
+      await dispatch({ type: 'branch/fetchBranchs', payload: pagination });
+      setLoading(false); 
+    }
+
+    fetchData();
+  }, [dispatch, pagination]);
+
   return (
     <PageContainer>
       <ProTable<BranchTyping.BranchInfo>
@@ -174,16 +180,8 @@ const Branch: React.FC = () => {
         actionRef={actionRef}
         search={false}
         bordered={true}
+        dataSource={branch.list}
         rowKey="branchId"
-        request={async (params) => {
-          const data = await fetchBranchData(params);
-
-          return {
-            data: data.data,
-            total: data.total,
-            success: true
-          }
-        }}
         toolBarRender={() => [
           <Button
             icon={<PlusOutlined />}
@@ -196,7 +194,16 @@ const Branch: React.FC = () => {
           </Button>
         ]}
         pagination={{
-          pageSize: 10
+          current: pagination.current,
+          pageSize: pagination.pageSize,
+          total: branch.total,
+          onChange: async (current: number, pageSize: number) => {
+            setPagination({ current, pageSize });
+
+            setLoading(true); 
+            await dispatch({ type: 'branch/fetchBranchs', payload: {current, pageSize} });
+            setLoading(false);
+          }
         }}
         rowSelection={{
           selectedRowKeys: selectedRowKeysState,
@@ -249,10 +256,10 @@ const Branch: React.FC = () => {
           onSubmit={async (value) => {
             setLoading(true);
             const success = await handleCreateBranch(value);
-            setCreateModalVisible(false);
             setLoading(false);
 
             if (success) {
+              setCreateModalVisible(false);
               if (actionRef.current) {
                 await actionRef.current.reload();
               }
@@ -272,9 +279,9 @@ const Branch: React.FC = () => {
           setLoading(true);
           const success = await handleUpdateBranch(data);
           setLoading(false);
-          setUpdateModalVisible(false);
 
           if (success) {
+            setUpdateModalVisible(false);
             if (actionRef.current) {
               await actionRef.current.reload();
             }
@@ -285,4 +292,8 @@ const Branch: React.FC = () => {
   );
 };
 
-export default Branch;
+export default connect(
+  ( {branch}: {branch: BranchState} ) => (
+    {branch}
+  )
+)(Branch);

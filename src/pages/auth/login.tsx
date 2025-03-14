@@ -13,8 +13,8 @@ import {
 } from '@ant-design/pro-components';
 import { Button, Divider, message, Space, theme } from 'antd';
 import logoUrl from "@/assets/logo/KLB_logo.svg";
-import type { CSSProperties } from 'react';
-import { history, RequestError } from '@umijs/max';
+import { useCallback, type CSSProperties, type FC } from 'react';
+import { history, RequestError, useModel } from '@umijs/max';
 import { login } from "@/services/auth/authService";
 
 const iconStyles: CSSProperties = {
@@ -24,23 +24,25 @@ const iconStyles: CSSProperties = {
   cursor: 'pointer',
 };
 
-const Page = () => {
+
+const Page: FC = () => {
   const { token } = theme.useToken();
 
-  const handleLogin = async (data: any) => {
+  const handleLogin = useCallback(async (data: AuthTyping.LoginData) => {
     try { 
-      const {accessToken} = await login(data);
+      const {access_token, refresh_token} = await login(data);
 
-      localStorage.setItem('access_token', accessToken); 
+      localStorage.setItem('access_token', access_token);
+      localStorage.setItem('refresh_token', refresh_token);
       message.success('Đăng nhập thành công!'); 
       
-      history.push('/dashboard'); 
+      history.push('/home'); 
       window.location.reload()
     } catch (error: RequestError | any) { 
-      const msg = error?.response?.data?.error?.message || error?.response?.data || error?.message || 'Unknow Error!';
+      const msg = error?.response?.data?.message || error?.response?.data || error?.message || 'Unknow Error!';
       message.error(msg); 
     } 
-  };
+  }, []);
 
   return (
     <div
@@ -61,7 +63,7 @@ const Page = () => {
         activityConfig={{
           style: {
             boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.2)',
-            color: token.colorTextHeading,
+            color: 'white',
             borderRadius: 8,
             backgroundColor: 'rgba(255,255,255,0.25)',
             backdropFilter: 'blur(4px)',
@@ -75,7 +77,7 @@ const Page = () => {
               style={{
                 borderRadius: 20,
                 background: token.colorBgElevated,
-                color: token.colorPrimary,
+                color: 'black',
                 width: '100%',
               }}
             >
@@ -112,7 +114,7 @@ const Page = () => {
                   flexDirection: 'column',
                   height: 40,
                   width: 40,
-                  border: '1px solid ' + token.colorPrimaryBorder,
+                  border: '1px solid ' + token.colorText,
                   borderRadius: '50%',
                 }}
               >
@@ -126,7 +128,7 @@ const Page = () => {
                   flexDirection: 'column',
                   height: 40,
                   width: 40,
-                  border: '1px solid ' + token.colorPrimaryBorder,
+                  border: '1px solid ' + token.colorText,
                   borderRadius: '50%',
                 }}
               >
@@ -140,7 +142,7 @@ const Page = () => {
                   flexDirection: 'column',
                   height: 40,
                   width: 40,
-                  border: '1px solid ' + token.colorPrimaryBorder,
+                  border: '1px solid ' + token.colorText,
                   borderRadius: '50%',
                 }}
               >
@@ -200,10 +202,8 @@ const Page = () => {
   );
 };
 
-export default () => {
-  return (
-    <ProConfigProvider dark>
-      <Page />
-    </ProConfigProvider>
-  );
-};
+export default () => (
+  <ProConfigProvider>
+    <Page />
+  </ProConfigProvider>
+);

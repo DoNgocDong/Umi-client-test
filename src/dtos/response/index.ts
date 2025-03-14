@@ -7,4 +7,5 @@ export interface ResponseDTO<T> {
   data: T;
   message: string;
   code: number;
+  result: T;
 }

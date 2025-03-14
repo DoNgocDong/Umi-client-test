@@ -1,7 +1,7 @@
 import { lazy, Suspense, FC } from "react";
 import { Spin } from "antd";
 
-const BranchComponent = lazy( () => import('@/components/Branch') );
+const BranchComponent = lazy( () => import('@/components/Admin/Branch') );
 
 const BranchPage: FC = () => {
   return(

@@ -1,4 +1,3 @@
-import { layout } from "@/app";
 
 export default [
   {
@@ -15,6 +14,7 @@ export default [
     name: 'Home',
     path: '/home',
     component: './Home',
+    icon: 'HomeOutlined'
   },
   {
     name: 'Admin',
@@ -26,7 +26,8 @@ export default [
       {name: 'Interest Rate', path: '/interest-rate', component: './interest_rate'},
     ],
     wrappers: ['@/wrappers/auth'],
-    access: 'admin'
+    access: 'admin',
+    icon: 'SettingOutlined'
   },
   // {
   //   name: ' CRUD',

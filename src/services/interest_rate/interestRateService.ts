@@ -13,6 +13,9 @@ export async function getPagination(params?: PageReqData) {
 
   return request<PageData<InterestRateInfo>>(path, {
     method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    },
     params: pageParams,
   });
 }
@@ -20,6 +23,9 @@ export async function getPagination(params?: PageReqData) {
 export async function create(data: InterestRateDTO) {
   return request<PageData<InterestRateInfo>>(path, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
     data: data,
   })
 }
@@ -27,6 +33,9 @@ export async function create(data: InterestRateDTO) {
 export async function updateById(id: string, data: InterestRateDTO) {
   return request<PageData<InterestRateInfo>>(path + `/${id}`, {
     method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
     data: data,
   })
 }
@@ -34,6 +43,9 @@ export async function updateById(id: string, data: InterestRateDTO) {
 export async function deleteByIds(ids: String[]) {
   return request(path, {
     method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
     data: ids
   })
 }

@@ -142,23 +142,6 @@ const InterestRate: FC = () => {
         )
       }
     },
-    // {
-    //   title: 'Option',
-    //   dataIndex: 'option',
-    //   valueType: 'option',
-    //   fixed: 'right',
-    //   width: '5%',
-    //   render: (text: ReactNode, record: InterestRateTyping.InterestRateInfo) => (
-    //     <>
-    //       <a 
-    //         style={{ display: 'flex', justifyContent: 'center' }} 
-    //         onClick={() => handleEdit(record)}
-    //       >
-    //         <EditOutlined />
-    //       </a>
-    //     </>
-    //   )
-    // },
   ]
 
   return (
