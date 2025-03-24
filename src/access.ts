@@ -19,7 +19,7 @@ export default function access(initialState: {
   );
 
   const customer = !!(
-    decoded && decoded.role == 'CUSTOMER'
+    decoded && decoded.realm_access ? decoded.realm_access.roles.includes('CUSTOMER') : false
   );
 
   return {

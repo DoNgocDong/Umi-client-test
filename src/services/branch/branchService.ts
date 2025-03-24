@@ -3,7 +3,6 @@ import { PageData, ResponseDTO } from '@/dtos/response';
 import { PageInfo, PageReqData } from '@/dtos/request';
 
 const path = '/account/api/v1/accounts/branch';
-// const path = '/api/v1/accounts/branch';
 
 export async function getPagination(params?: PageReqData) {
   const pageParams: PageInfo = {

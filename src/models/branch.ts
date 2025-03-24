@@ -37,7 +37,6 @@ const BranchModel: BranchModelType = {
     *fetchBranchs({payload}, {call, put}) {
       const {data}: {data: PageData<BranchTyping.BranchInfo[]>} = yield call(getPagination, payload);
       const {list_data, total} = data;
-      console.log(list_data);
       yield put({ type: 'queryBranchs', payload: {list: list_data, total} });
     },
 

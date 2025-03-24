@@ -1,7 +1,7 @@
 import { lazy, Suspense, FC } from "react";
 import { Spin } from "antd";
 
-const UserComponent = lazy( () => import('@/components/User') );
+const UserComponent = lazy( () => import('@/components/Admin/User') );
 
 const UserPage: FC = () => {
   return(

@@ -1,7 +1,7 @@
-import { request, useModel } from '@umijs/max';
+import { request } from '@umijs/max';
 import { ResponseDTO } from '@/dtos/response';
 
-const serviceUri = process.env.REACT_APP_SERVICE_URI || 'http://localhost:8080';
+const serviceUri = SERVICE_URI || 'http://localhost:8080';
 
 const apiRequest =
   <T>(url: string,
@@ -9,7 +9,7 @@ const apiRequest =
   ): Promise<ResponseDTO<T>> => {
   const jwtToken = localStorage.getItem('access_token');
 
-  if(jwtToken != 'undefined') {
+  if((jwtToken != null)) {
     opts['headers']['Authorization'] = 'Bearer ' + jwtToken;
   }
 

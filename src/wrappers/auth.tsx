@@ -1,9 +1,8 @@
-import { useAccess, useModel, history, Outlet } from '@umijs/max';
+import { useModel, history, Outlet } from '@umijs/max';
 import { message } from 'antd';
 import { useEffect } from 'react';
 
 export default () => {
-  const access = useAccess(); // Lấy quyền truy cập từ access.ts
   const { initialState } = useModel('@@initialState'); // Lấy user từ initialState
 
   useEffect(() => {
@@ -12,10 +11,6 @@ export default () => {
       history.push('/login');
     }
   }, [initialState?.token]);
-
-  if (!access.admin) {
-    return <div>Bạn không có quyền truy cập trang này!</div>;
-  }
 
   return <Outlet></Outlet>; 
 }

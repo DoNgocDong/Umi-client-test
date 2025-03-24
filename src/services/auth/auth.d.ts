@@ -4,10 +4,15 @@ declare namespace AuthTyping {
     password: string;
   }
 
+  interface RealmAccess {
+    roles: Array<string>;
+  }
+
   interface AuthPayload {
     role: string;
     username: string;
     name?: string;
+    realm_access?: RealmAccess;
   }
 
   interface ResUserLoggedIn {

@@ -197,13 +197,18 @@ const Branch: React.FC<BranchListProps> = ({ branch, dispatch }) => {
           current: pagination.current,
           pageSize: pagination.pageSize,
           total: branch.total,
+          showSizeChanger: true,
+          pageSizeOptions: ['10', '20', '50', '100'],
           onChange: async (current: number, pageSize: number) => {
             setPagination({ current, pageSize });
 
             setLoading(true); 
             await dispatch({ type: 'branch/fetchBranchs', payload: {current, pageSize} });
             setLoading(false);
-          }
+          },
+          onShowSizeChange: (current, newSize) => {
+            setPagination({ current, pageSize: newSize });
+          },
         }}
         rowSelection={{
           selectedRowKeys: selectedRowKeysState,

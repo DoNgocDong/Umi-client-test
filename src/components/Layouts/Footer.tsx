@@ -1,27 +1,36 @@
-import {CSSProperties, FC} from 'react';
+import { GithubOutlined } from '@ant-design/icons';
+import { DefaultFooter } from '@ant-design/pro-components';
+import React from 'react';
 
-interface CSSProp {
-  [key: string]: CSSProperties
-}
-
-const styles: CSSProp = {
-  footer: {
-    textAlign: 'center',
-    padding: '16px',
-    background: '#f0f2f5',
-    position: 'absolute', // ✅ Luôn ở dưới
-    bottom: 0,
-    width: '100%',
-  },
-};
-
-const CustomFooter: FC = () => {
+const Footer: React.FC = () => {
   return (
-    <div style={styles.footer}>
-      © {new Date().getFullYear()} MyCompany - All rights reserved.
-    </div>
+    <DefaultFooter
+      style={{
+        background: 'none',
+      }}
+      copyright="Powered by Ant Desgin"
+      links={[
+        {
+          key: 'Ant Design Pro',
+          title: 'Ant Design Pro',
+          href: 'https://pro.ant.design',
+          blankTarget: true,
+        },
+        {
+          key: 'github',
+          title: <GithubOutlined />,
+          href: 'https://github.com/DoNgocDong',
+          blankTarget: true,
+        },
+        {
+          key: 'Ant Design',
+          title: 'Ant Design',
+          href: 'https://ant.design',
+          blankTarget: true,
+        },
+      ]}
+    />
   );
 };
 
-
-export default CustomFooter;
+export default Footer;

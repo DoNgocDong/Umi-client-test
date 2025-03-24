@@ -43,9 +43,6 @@ export async function login(data: AuthTyping.LoginData) {
 
   const {result: res} = await request<AuthTyping.ResUserLoggedIn>(path + '/token', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
     data,
   });
 

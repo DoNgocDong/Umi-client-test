@@ -1,18 +1,16 @@
 import { defineConfig } from '@umijs/max';
-import * as Icons from '@ant-design/icons';
 import routes from './routes';
 
 export default defineConfig({
   define: {
     SERVICE_URI: process.env.REACT_APP_SERVICE_URI,
     JWT_SECRET_KEY: process.env.REACT_APP_JWT_SECRET_KEY,
-    JWT_EXPIRED_TIME: process.env.JWT_EXPIRED_TIME
+    JWT_EXPIRED_TIME: process.env.JWT_EXPIRED_TIME,
+    PUBLIC_PAGE_PATH: ['login', 'home']
   },
   icons: {},
   hash: true,
-  antd: {
-    compact: true
-  },
+  antd: {},
   access: {},
   mako: {},
   model: {},
